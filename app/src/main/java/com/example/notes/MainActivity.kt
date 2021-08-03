@@ -42,5 +42,6 @@ class MainActivity : AppCompatActivity(), INotesRVAdapter {
             viewModel.insertNote(Note(noteText))
             Toast.makeText(this, "$noteText Inserted", Toast.LENGTH_SHORT).show()
         }
+        etInput.text.clear()
     }
 }
