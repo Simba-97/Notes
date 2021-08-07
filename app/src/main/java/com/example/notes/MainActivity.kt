@@ -1,5 +1,7 @@
 package com.example.notes
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -14,22 +16,40 @@ class MainActivity : AppCompatActivity(), INotesRVAdapter {
 
     lateinit var viewModel: NoteViewModel
 
-     override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-         recyclerView.layoutManager = LinearLayoutManager(this)
-         val adapter = NotesRVAdaptor(this, this)
-         recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        val adapter = NotesRVAdaptor(this, this)
+        recyclerView.adapter = adapter
 
-         viewModel = ViewModelProvider(this,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(NoteViewModel::class.java)
-         viewModel.allNotes.observe(this, Observer { list ->
-             list?.let {
+        viewModel = ViewModelProvider(
+            this,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(application)
+        ).get(NoteViewModel::class.java)
+        viewModel.allNotes.observe(this, Observer { list ->
+            list?.let {
                 adapter.updateList(it)
-             }
-         })
+            }
+        })
+
+        if (savedInstanceState != null) {
+            val name = savedInstanceState.getString("Note", null)
+            etInput.setText(name)
+        }
     }
+
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        outState.putString("Note", etInput.text.toString())
+//    }
+//
+//    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+//        super.onRestoreInstanceState(savedInstanceState)
+//        val name = savedInstanceState.getString("Note", null)
+//        etInput.setText(name )
+//    }
 
     override fun onItemClicked(note: Note) {
         viewModel.deleteNote(note)
@@ -42,6 +62,11 @@ class MainActivity : AppCompatActivity(), INotesRVAdapter {
             viewModel.insertNote(Note(noteText))
             Toast.makeText(this, "$noteText Inserted", Toast.LENGTH_SHORT).show()
         }
-        etInput.text.clear()
+        etInput.text.clear() 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        submitData(view = etInput)
     }
 }
