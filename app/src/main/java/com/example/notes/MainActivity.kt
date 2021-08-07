@@ -34,10 +34,10 @@ class MainActivity : AppCompatActivity(), INotesRVAdapter {
             }
         })
 
-        if (savedInstanceState != null) {
-            val name = savedInstanceState.getString("Note", null)
-            etInput.setText(name)
-        }
+//        if (savedInstanceState != null) {
+//          val name = savedInstanceState.getString("Note", null)
+//          etInput.setText(name)
+//        }
     }
 
 //    override fun onSaveInstanceState(outState: Bundle) {
